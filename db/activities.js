@@ -14,7 +14,7 @@ async function createActivity({ name, description }) {
       [name, description]
     );
 
-    name.description = null;
+    // name.description = null;
 console.log("CREATE ACTIVITY FUNCTION RETURNING: ", activity)
     return activity;
   } catch (error) {
