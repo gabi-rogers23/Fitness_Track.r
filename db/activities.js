@@ -1,4 +1,4 @@
-const client = require('./client');
+const client = require("./client");
 
 // database functions
 async function createActivity({ name, description }) {
@@ -14,8 +14,9 @@ async function createActivity({ name, description }) {
       [name, description]
     );
 
-    // name.description = null;
-console.log("CREATE ACTIVITY FUNCTION RETURNING: ", activity)
+    
+    // console.log("CREATE ACTIVITY FUNCTION RETURNING: ", activity);
+
     return activity;
   } catch (error) {
     throw error;
@@ -24,6 +25,18 @@ console.log("CREATE ACTIVITY FUNCTION RETURNING: ", activity)
 
 async function getAllActivities() {
   // select and return an array of all activities
+  try {
+    const { rows: activities } = await client.query(`
+    SELECT * 
+    FROM activities;
+    `);
+
+    // console.log("GET ALL ACTIVITES FUNCTION RETURNING: ", activities);
+
+    return activities;
+  } catch (error) {
+    throw error;
+  }
 }
 
 async function getActivityById(id) {}

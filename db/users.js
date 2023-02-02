@@ -17,7 +17,7 @@ async function createUser({ username, password }) {
     );
 
     user.password = null;
-console.log("CREATE USER FUNCTION RETURNING: ", user)
+// console.log("CREATE USER FUNCTION RETURNING: ", user)
     return user;
   } catch (error) {
     throw error;
