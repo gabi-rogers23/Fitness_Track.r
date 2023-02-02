@@ -29,7 +29,8 @@ async function getRoutineById(id) {
     SELECT * FROM routines WHERE id=${id};
     `);
 
-    console.log("GET ROUTINE BY ID RETURNING: ", routine);
+    // console.log("GET ROUTINE BY ID RETURNING: ", routine);
+    
     return routine;
   } catch (error) {
     throw error;
@@ -52,44 +53,32 @@ async function getRoutinesWithoutActivities() {
 
 async function getAllRoutines() {
   try {
-    const routines = await getRoutinesWithoutActivities();
 
-    const routineIds = routines.map((routine) => {
-      return routine.id;
-    });
-
-    const { rows: routinesActivities } = await client.query(`
-  SELECT * FROM routine_activities WHERE "routineId" in(${routineIds});
-  `);
-
-    const activityIds = routinesActivities.map((routineActivity) => {
-      return routineActivity.activityId;
-    });
-
-    const { rows: activities } = await client.query(`
-SELECT * FROM activities WHERE id in(${activityIds});
+    const { rows: routines } = await client.query(`
+    SELECT r.*, u.username as "creatorName" 
+    FROM routines r
+    JOIN users u ON u.id = r."creatorId";
 `);
 
-routines.map((routine)=>{
- const routineActivitesById = routinesActivities.filter((el)=>{
-  return routine.id === el.routineId
- })
+// console.log("FIRST ROUTINES", routines)
 
- const activityId = routineActivitesById.map((el)=>{
-    return el.activityId
- })
+const { rows: routineActivities } = await client.query(`
+SELECT a.id AS id, a.name AS name, r.id AS "routineId", description, duration, count, goal, "isPublic", u.username AS creator, ra.id as "routineActivityId" 
+FROM routines r
+JOIN routine_activities ra
+ON ra."routineId" = r.id
+JOIN activities a 
+ON a.id = ra."activityId"
+JOIN users u
+ON u.id = r."creatorId"; 
+  `);
+    // console.log("ROUTINE ACTIVITIES", routineActivities)
 
-const activitiesById = activities.filter((el)=>{
-  return activityId.includes(el.id)
-})
-
-routine.activities = activitiesById;
-})
-
-
-    console.log("GET ALL ROUTINES RETURNING: ", routines)
-
-    return routines;
+    routines.forEach((routine) => {
+      routine.activities = routineActivities.filter((routineActivity) => { return routine.id === routineActivity.routineId })
+    })
+    // console.log("ALL ROUTINES", routines)
+    return routines
   } catch (error) {
     throw error;
   }
