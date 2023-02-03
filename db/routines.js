@@ -148,7 +148,7 @@ async function updateRoutine({ id, ...fields }) {
     const setString = Object.keys(updateFields).map(
       (key, i) => `"${ key }"=$${ i + 1 }`
     ).join(', ');
-    console.log(setString);
+    // console.log(setString);
     const {rows: [updatedRoutine]} = await client.query(`
     UPDATE routines
     SET ${setString}
@@ -163,14 +163,17 @@ async function updateRoutine({ id, ...fields }) {
 
 async function destroyRoutine(id) {
   try{
+
+    await client.query(`
+    DELETE FROM routine_activities
+    WHERE "routineId" = ${id}`)
+
+
     await client.query(`
       DELETE FROM routines
       WHERE id = ${id}
     `)
-    await client.query(`
-    DELETE FROM routine_activities
-    WHERE "routineId" = ${id}
-    `)
+
   }catch (error){
     throw error;
   }
