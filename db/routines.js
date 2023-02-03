@@ -78,13 +78,22 @@ ON u.id = r."creatorId";
       routine.activities = routineActivities.filter((routineActivity) => { return routine.id === routineActivity.routineId })
     })
     // console.log("ALL ROUTINES", routines)
-    return routines
+    return routines;
   } catch (error) {
     throw error;
   }
 }
 
-async function getAllPublicRoutines() {}
+async function getAllPublicRoutines() {
+  try{
+    const routines = await getAllRoutines();
+    const publicRoutines = routines.filter((routine) => { return routine.isPublic})
+    return publicRoutines;
+
+  } catch(error) {
+    throw error;
+  }
+}
 
 async function getAllRoutinesByUser({ username }) {}
 
