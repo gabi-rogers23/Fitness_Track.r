@@ -135,7 +135,27 @@ async function getPublicRoutinesByActivity({ id }) {
 
 async function updateRoutine({ id, ...fields }) {
   try{
-
+    const updateFields = {};
+    if (Object.hasOwn(fields, "isPublic")){
+      updateFields.isPublic = fields.isPublic
+    }
+    if (Object.hasOwn(fields, "name")){
+      updateFields.name = fields.name
+    }
+    if (Object.hasOwn(fields, "goal")){
+      updateFields.goal = fields.goal
+    }
+    const setString = Object.keys(updateFields).map(
+      (key, i) => `"${ key }"=$${ i + 1 }`
+    ).join(', ');
+    console.log(setString);
+    const {rows: [updatedRoutine]} = await client.query(`
+    UPDATE routines
+    SET ${setString}
+    WHERE id=${id}
+    RETURNING *;
+    `, Object.values(updateFields));
+    return updatedRoutine;
   }catch(error){
     throw error;
   }
