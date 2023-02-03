@@ -17,18 +17,58 @@ async function createUser({ username, password }) {
     );
 
     user.password = null;
-// console.log("CREATE USER FUNCTION RETURNING: ", user)
+    // console.log("CREATE USER FUNCTION RETURNING: ", user)
     return user;
   } catch (error) {
     throw error;
   }
 }
 
-async function getUser({ username, password }) {}
+async function getUser({ username, password }) {
+  try {
+ const user = await getUserByUsername(username);
 
-async function getUserById(userId) {}
+if (password === user.password){
+  user.password = null;
+  return user
+}
 
-async function getUserByUsername(userName) {}
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function getUserById(userId) {
+  try {
+    const {
+      rows: [user],
+    } = await client.query(`
+    SELECT * FROM users
+    WHERE id=${userId};
+`);
+
+    user.password = null;
+
+    return user;
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function getUserByUsername(userName) {
+  try {
+    const {
+      rows: [user],
+    } = await client.query(`
+        SELECT * FROM users
+        WHERE username='${userName}';
+    `);
+
+    return user;
+  } catch (error) {
+    throw error;
+  }
+}
 
 module.exports = {
   createUser,
