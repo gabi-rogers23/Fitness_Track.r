@@ -118,13 +118,28 @@ async function getPublicRoutinesByUser({ username }) {
 async function getPublicRoutinesByActivity({ id }) {
   try{
     const publicRoutines = await getAllPublicRoutines();
-    console.log(publicRoutines);
+    const matchToRoutines = [];
+    publicRoutines.forEach((routine) => {
+      const activityId = routine.activities.map((activity) => {
+        return activity.id;
+      })
+    if (activityId.includes(id)){
+      matchToRoutines.push(routine)
+    }
+    })
+    return matchToRoutines;
   } catch(error) {
     throw error;
   }
 }
 
-async function updateRoutine({ id, ...fields }) {}
+async function updateRoutine({ id, ...fields }) {
+  try{
+
+  }catch(error){
+    throw error;
+  }
+}
 
 async function destroyRoutine(id) {}
 
