@@ -10,8 +10,17 @@ const {
 router.get("/:activityId/routines", async  (req, res, next) => {
     try{
         const activity = await getActivityById(req.params.activityId)
-        const routines = await getPublicRoutinesByActivity(activity)
-        res.send(routines)
+        if (activity === undefined) {
+          console.log("WE ARE HERE")
+          res.status(404).send({
+            "error" : "404 Not Found",
+            "message" : `Activity ${req.params.activityId} not found`, 
+            "name" : "No Activity Found"
+          })
+        } else {
+          const routines = await getPublicRoutinesByActivity(activity)
+          res.send(routines)  
+        }
     }catch(error){
         next(error);
     }
