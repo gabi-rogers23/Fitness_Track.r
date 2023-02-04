@@ -26,14 +26,73 @@ async function addActivityToRoutine({
   }
 }
 
-async function getRoutineActivityById(id) {}
+async function getRoutineActivityById(id) {
+  try {
+    const {
+      rows: [routineActivity],
+    } = await client.query(`
+    SELECT * FROM routine_activities
+    WHERE id=${id}
+    `);
 
-async function getRoutineActivitiesByRoutine({ id }) {}
+    return routineActivity;
+  } catch (error) {
+    throw error;
+  }
+}
 
-async function updateRoutineActivity({ id, ...fields }) {}
+async function getRoutineActivitiesByRoutine({ id }) {
+  try {
+    const { rows: routines } = await client.query(`
+    SELECT * FROM routine_activities
+    WHERE "routineId"=${id}
+    `);
 
-async function destroyRoutineActivity(id) {}
+    return routines;
+  } catch (error) {
+    throw error;
+  }
+}
 
+async function updateRoutineActivity({ id, ...fields }) {
+  try {
+    const updateFields = {};
+    if (Object.hasOwn(fields, "count")) {
+      updateFields.count = fields.count;
+    }
+
+    if (Object.hasOwn(fields, "duration")) {
+      updateFields.duration = fields.duration;
+    }
+
+    const setString = Object.keys(updateFields)
+      .map((key, i) => `"${key}"=$${i + 1}`)
+      .join(", ");
+    // console.log(setString);
+    const {
+      rows: [updatedRoutineActivity],
+    } = await client.query(
+      `
+    UPDATE routine_activities
+    SET ${setString}
+    WHERE id=${id}
+    RETURNING *;
+    `,
+      Object.values(updateFields)
+    );
+
+    return updatedRoutineActivity;
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function destroyRoutineActivity(id) {
+  try{
+}catch(error){
+  throw error;
+}
+}
 async function canEditRoutineActivity(routineActivityId, userId) {}
 
 module.exports = {
