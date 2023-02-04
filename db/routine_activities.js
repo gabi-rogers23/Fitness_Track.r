@@ -89,11 +89,36 @@ async function updateRoutineActivity({ id, ...fields }) {
 
 async function destroyRoutineActivity(id) {
   try{
+
+    await client.query(`
+    DELETE FROM routine_activities
+    WHERE id=${id};`)
+
+    return {"id": id} 
+    //why does this want an object with id in it returned?
+
 }catch(error){
   throw error;
 }
 }
-async function canEditRoutineActivity(routineActivityId, userId) {}
+async function canEditRoutineActivity(routineActivityId, userId) {
+  try {
+
+    const { rows: routineActivities } = await client.query(`
+    SELECT *
+    FROM routines r
+    JOIN routine_activities ra ON ra."routineId" = r.id
+    WHERE "routineId"=${routineActivityId} AND "creatorId"=${userId};
+    `)
+
+    // console.log(routineActivities)
+
+return routineActivities.length !== 0;
+
+  } catch (error) {
+    throw error;
+  }
+}
 
 module.exports = {
   getRoutineActivityById,

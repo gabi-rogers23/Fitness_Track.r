@@ -1,4 +1,3 @@
-const { getAllActivities } = require("./activities");
 const client = require("./client");
 
 async function createRoutine({ creatorId, isPublic, name, goal }) {
