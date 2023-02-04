@@ -111,7 +111,7 @@ async function canEditRoutineActivity(routineActivityId, userId) {
     WHERE "routineId"=${routineActivityId} AND "creatorId"=${userId};
     `)
 
-    // console.log(routineActivities)
+    // console.log("CAN EDIT RETURNING: ", routineActivities, "Routine Activity Id", routineActivityId, "creatorId", userId)
 
 return routineActivities.length !== 0;
 
