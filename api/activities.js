@@ -56,7 +56,7 @@ router.post("/", async (req, res, next) => {
     } else {
       postData.name = name;
       postData.description = description;
-
+//Should include the userId? to check to make sure they are capable of posting or do that on the front end?
       const activity = await createActivity(postData);
       res.send(activity);
     }
