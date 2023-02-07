@@ -1,5 +1,5 @@
 const client = require("./client");
-const { getAllRoutines } = require("./");
+
 
 // database functions
 async function createActivity({ name, description }) {
@@ -71,11 +71,11 @@ async function getActivityByName(name) {
   }
 }
 
-async function attachActivitiesToRoutines() {
-  // select and return an array of all activities
+// async function attachActivitiesToRoutines() {
+//   // select and return an array of all activities
 
-  return getAllRoutines();
-}
+//   return getAllRoutines();
+// }
 
 async function updateActivity({ id, ...fields }) {
   // don't try to update the id
@@ -118,7 +118,6 @@ module.exports = {
   getAllActivities,
   getActivityById,
   getActivityByName,
-  attachActivitiesToRoutines,
   createActivity,
   updateActivity,
 };

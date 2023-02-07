@@ -108,7 +108,7 @@ async function canEditRoutineActivity(routineActivityId, userId) {
     SELECT *
     FROM routines r
     JOIN routine_activities ra ON ra."routineId" = r.id
-    WHERE "routineId"=${routineActivityId} AND "creatorId"=${userId};
+    WHERE ra.id=${routineActivityId} AND "creatorId"=${userId};
     `)
 
     // console.log("CAN EDIT RETURNING: ", routineActivities, "Routine Activity Id", routineActivityId, "creatorId", userId)

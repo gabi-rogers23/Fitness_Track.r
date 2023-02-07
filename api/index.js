@@ -31,11 +31,11 @@ router.use(async (req, res, next) => {
 });
 
 router.use((req, res, next) => {
-    if (req.user) {
+  if (req.user) {
     //   console.log("User is set:", req.user);
-    }
-    next();
-  });
+  }
+  next();
+});
 
 // GET /api/health
 router.get("/health", async (req, res, next) => {});

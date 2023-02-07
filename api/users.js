@@ -3,6 +3,14 @@ const express = require("express");
 const router = express.Router();
 
 // POST /api/users/register
+router.post("/register", async(req, res, next)=> {
+    
+    try{
+        
+    }catch(error){
+        next(error);
+    }
+})
 
 // POST /api/users/login
 

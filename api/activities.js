@@ -70,20 +70,19 @@ router.patch("/:activityId", requireUser, async (req, res, next) => {
   const { name, description } = req.body;
   const updateFields = {};
   try {
+    const currentActivity = await getActivityById(activityId);
 
-    const currentActivity = await getActivityById(activityId)
+    if (!currentActivity) {
+      res.status(400).send({
+        error: "400 Activity does not exist",
+        message: `Activity ${activityId} not found`,
+        name: "Activity Not Found",
+      });
+    }
 
-  if(!currentActivity){
-    res.status(400).send({
-      error: "400 Activity does not exist",
-      message: `Activity ${activityId} not found`,
-      name: "Activity Not Found",
-    })
-  }
-
-  if (description) {
-    updateFields.description = description;
-  }
+    if (description) {
+      updateFields.description = description;
+    }
 
     if (name) {
       const allActivities = await getAllActivities();
@@ -101,10 +100,10 @@ router.patch("/:activityId", requireUser, async (req, res, next) => {
       }
     }
     updateFields.id = activityId;
-      const updatedActivity = await updateActivity({updateFields});
-      // console.log("UPDATED ACTIVITY: ", updatedActivity);
-      res.send(updatedActivity);
-  }catch(error){
+    const updatedActivity = await updateActivity( updateFields );
+    // console.log("UPDATED ACTIVITY: ", updatedActivity);
+    res.send(updatedActivity);
+  } catch (error) {
     next(error);
   }
 });
