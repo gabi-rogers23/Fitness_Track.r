@@ -30,8 +30,10 @@ async function createUser({ username, password }) {
 }
 
 async function getUser({ username, password }) {
+  console.log("USERNAME", username, "PASSWORD", password)
   try {
  const user = await getUserByUsername(username);
+
  const hashedPassword = user.password;
 
  let passwordsMatch = await bcrypt.compare(password, hashedPassword) 
@@ -64,6 +66,7 @@ async function getUserById(userId) {
 
 async function getUserByUsername(userName) {
   try {
+    
     const {
       rows: [user],
     } = await client.query(`
