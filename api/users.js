@@ -1,7 +1,12 @@
 /* eslint-disable no-useless-catch */
 const express = require("express");
 const router = express.Router();
-const { getUserByUsername, createUser, getUser } = require("../db");
+const {
+  getUserByUsername,
+  createUser,
+  getUser,
+  getUserById,
+} = require("../db");
 const jwt = require("jsonwebtoken");
 
 // POST /api/users/register
@@ -60,20 +65,18 @@ router.post("/login", async (req, res, next) => {
   if (!username || !password) {
     next({
       name: "MissingCredentialsError",
-      message: "Please supply both a username and password"
+      message: "Please supply both a username and password",
     });
   }
 
   try {
-
     const user = await getUser(req.body);
-console.log(user)
 
     if (!user) {
-     next({
-      name : "UserNotFound", 
-     message: "Username or Password is incorrect!"
-    });
+      next({
+        name: "UserNotFound",
+        message: "Username or Password is incorrect!",
+      });
     } else {
       const token = jwt.sign(user, process.env.JWT_SECRET);
 
@@ -87,7 +90,42 @@ console.log(user)
     next(error);
   }
 });
+
+
 // GET /api/users/me
+router.get("/me", async (req, res, next) => {
+  try {
+    const prefix = "Bearer ";
+    const auth = req.headers.authorization;
+    console.log(auth)
+    if (auth && auth.startsWith(prefix)) {
+      const token = auth.slice(prefix.length);
+      // console.log("TOKEN ", token);
+      const user = jwt.verify(token, process.env.JWT_SECRET);
+      // console.log("USER ", user);
+      userObject = await getUserById(user.id);
+
+      if (!userObject) {
+        res.status(401).send({
+          error: "Invalid User",
+          message: `You must be logged in to perform this action`,
+          name: "Invlaid User Token",
+        });
+      }
+
+      res.send(userObject);
+    } else {
+      console.log("INSIDE ELSE")
+      res.status(401).send({
+        error: "No Token",
+        message: `You must be logged in to perform this action`,
+        name: "No User Token",
+      });
+    }
+  } catch (error) {
+    next(error);
+  }
+});
 
 // GET /api/users/:username/routines
 

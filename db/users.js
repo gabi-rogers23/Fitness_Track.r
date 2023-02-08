@@ -30,7 +30,7 @@ async function createUser({ username, password }) {
 }
 
 async function getUser({ username, password }) {
-  console.log("USERNAME", username, "PASSWORD", password)
+  // console.log("USERNAME", username, "PASSWORD", password)
   try {
  const user = await getUserByUsername(username);
 
