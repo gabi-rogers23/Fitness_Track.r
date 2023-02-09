@@ -6,6 +6,8 @@ const {
   createUser,
   getUser,
   getUserById,
+  getPublicRoutinesByUser,
+  getAllRoutinesByUser
 } = require("../db");
 const jwt = require("jsonwebtoken");
 
@@ -91,31 +93,13 @@ router.post("/login", async (req, res, next) => {
   }
 });
 
-
 // GET /api/users/me
 router.get("/me", async (req, res, next) => {
   try {
-    const prefix = "Bearer ";
     const auth = req.headers.authorization;
-    console.log(auth)
-    if (auth && auth.startsWith(prefix)) {
-      const token = auth.slice(prefix.length);
-      // console.log("TOKEN ", token);
-      const user = jwt.verify(token, process.env.JWT_SECRET);
-      // console.log("USER ", user);
-      userObject = await getUserById(user.id);
-
-      if (!userObject) {
-        res.status(401).send({
-          error: "Invalid User",
-          message: `You must be logged in to perform this action`,
-          name: "Invlaid User Token",
-        });
-      }
-
-      res.send(userObject);
+    if (auth) {
+      res.send(req.user);
     } else {
-      console.log("INSIDE ELSE")
       res.status(401).send({
         error: "No Token",
         message: `You must be logged in to perform this action`,
@@ -128,5 +112,22 @@ router.get("/me", async (req, res, next) => {
 });
 
 // GET /api/users/:username/routines
+
+router.get("/:username/routines", async (req, res, next) => {
+  console.log("REQ BODY USER ", req.user)
+  try {
+if (req.user.username != req.params.username){
+    const allPublicRoutines = await getPublicRoutinesByUser(req.params);
+
+    res.send(allPublicRoutines);
+}else{
+  const allRoutines = await getAllRoutinesByUser(req.params)
+  res.send(allRoutines)
+}
+
+  } catch (error) {
+    next(error);
+  }
+});
 
 module.exports = router;

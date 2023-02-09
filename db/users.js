@@ -66,7 +66,6 @@ async function getUserById(userId) {
 
 async function getUserByUsername(userName) {
   try {
-    
     const {
       rows: [user],
     } = await client.query(`
