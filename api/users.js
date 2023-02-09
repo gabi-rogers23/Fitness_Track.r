@@ -114,7 +114,7 @@ router.get("/me", async (req, res, next) => {
 // GET /api/users/:username/routines
 
 router.get("/:username/routines", async (req, res, next) => {
-  console.log("REQ BODY USER ", req.user)
+  // console.log("REQ BODY USER ", req.user)
   try {
 if (req.user.username != req.params.username){
     const allPublicRoutines = await getPublicRoutinesByUser(req.params);
