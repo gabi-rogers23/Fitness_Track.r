@@ -38,7 +38,11 @@ router.use((req, res, next) => {
 });
 
 // GET /api/health
-router.get("/health", async (req, res, next) => {});
+router.get("/health", async (req, res, next) => {
+  res.status(200).send({
+    message: "Server is up and healthy"
+  });
+});
 
 // ROUTER: /api/users
 const usersRouter = require("./users");
