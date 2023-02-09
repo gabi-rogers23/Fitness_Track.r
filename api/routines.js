@@ -79,7 +79,6 @@ router.delete("/:routineId", requireUser, async (req, res, next) => {
 // POST /api/routines/:routineId/activities
 router.post("/:routineId/activities", async (req, res, next) => {
   try {
-    console.log(req.params);
     const routineActivities = await getRoutineActivitiesByRoutine({
       id: req.params.routineId,
     });
