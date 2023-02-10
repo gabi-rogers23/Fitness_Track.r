@@ -23,7 +23,7 @@ app.use('*', (req, res, next) => {
 
 app.use((error, req, res, next)=>{
   res.status(500).send({
-    error: "500",
+    error: `${error}`,
     message: "Internal Server Error",
   })
   })
