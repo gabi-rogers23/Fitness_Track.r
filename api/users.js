@@ -5,7 +5,6 @@ const {
   getUserByUsername,
   createUser,
   getUser,
-  getUserById,
   getPublicRoutinesByUser,
   getAllRoutinesByUser
 } = require("../db");
@@ -37,12 +36,8 @@ router.post("/register", async (req, res, next) => {
       });
 
       const token = jwt.sign(
-        {
-          id: user.id,
-          username,
-        },
-        process.env.JWT_SECRET,
-        {
+        {id: user.id,username,
+        },process.env.JWT_SECRET,{
           expiresIn: "1w",
         }
       );
