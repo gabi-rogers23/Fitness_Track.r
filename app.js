@@ -20,6 +20,12 @@ app.use("/api", apiRouter);
 app.use('*', (req, res, next) => {
     res.status(404).send({message:"404 Not Found"})
   })
-  
+
+app.use((error, req, res, next)=>{
+  res.status(500).send({
+    error: "500",
+    message: "Internal Server Error",
+  })
+  })
 
 module.exports = app;
